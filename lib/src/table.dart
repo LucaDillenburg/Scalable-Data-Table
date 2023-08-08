@@ -1,8 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/widgets.dart';
 
 /// [ScalableDataTable] uses builder property to only build the active
 /// rows at the moment. Similar to ListView.builder, it improves the
@@ -46,6 +44,10 @@ class ScalableDataTable extends StatelessWidget {
   /// at least [minWidth] of available width.
   final double? minWidth;
 
+  final bool? showRowSeperator;
+
+  final bool? showScrollbarsAlways;
+
   ScalableDataTable({
     required this.rowBuilder,
     required this.header,
@@ -58,23 +60,24 @@ class ScalableDataTable extends StatelessWidget {
     this.scrollController,
     this.minWidth,
     Key? key,
+    this.showRowSeperator = true,
+    this.showScrollbarsAlways = true,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final localMinWidth = minWidth;
+
     return Container(
-      constraints: localMinWidth != null
-          ? BoxConstraints(minWidth: localMinWidth)
-          : null,
+      constraints: localMinWidth != null ? BoxConstraints(minWidth: localMinWidth) : null,
       child: LayoutBuilder(
         builder: (context, constraints) {
           final width = max(constraints.maxWidth, minWidth ?? 0);
           return _buildDefaultTextStyleWrapper(
             child: Scrollbar(
-              isAlwaysShown: true,
+              thumbVisibility: showScrollbarsAlways,
               controller: horizontalScrollController,
-              scrollbarOrientation: ScrollbarOrientation.bottom,
+              scrollbarOrientation: showScrollbarsAlways ?? false ? ScrollbarOrientation.bottom : null,
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 controller: horizontalScrollController,
@@ -107,8 +110,7 @@ class ScalableDataTable extends StatelessWidget {
   }
 
   Widget _buildContent(BuildContext context, {required double width}) {
-    final buildNotContentWrapper = (Widget child) => Center(
-        child: Padding(padding: const EdgeInsets.only(top: 20), child: child));
+    final buildNotContentWrapper = (Widget child) => Center(child: Padding(padding: const EdgeInsets.only(top: 20), child: child));
     if (itemCount < 0) {
       return buildNotContentWrapper(
         loadingBuilder?.call(context) ?? const CircularProgressIndicator(),
@@ -123,11 +125,12 @@ class ScalableDataTable extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           rowBuilder(context, index),
-          Container(
-            height: 1,
-            color: Colors.grey[100],
-            width: width,
-          ),
+          if (showRowSeperator == true)
+            Container(
+              height: 1,
+              color: Colors.grey[100],
+              width: width,
+            ),
         ],
       ),
       itemCount: itemCount,

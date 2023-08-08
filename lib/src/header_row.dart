@@ -1,14 +1,12 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 
 class ScalableTableHeader extends StatelessWidget {
   final List<Widget> children;
 
   /// Use [Container] width or [Expanded] with width wrapper
-  final Widget Function(BuildContext, int columnIndex, Widget child)
-      columnWrapper;
+  final Widget Function(BuildContext, int columnIndex, Widget child) columnWrapper;
 
   final double? maxWidth;
   final EdgeInsets? padding;
@@ -42,8 +40,7 @@ class ScalableTableRow extends StatelessWidget {
   final Color? color;
 
   /// Use [Container] width or [Expanded] with width wrapper
-  final Widget Function(BuildContext, int columnIndex, Widget child)
-      columnWrapper;
+  final Widget Function(BuildContext, int columnIndex, Widget child) columnWrapper;
 
   final double? maxWidth;
   final Function()? onTap;
@@ -89,8 +86,7 @@ class _HorizontalTable extends StatelessWidget {
   final List<Widget> children;
 
   /// Use [Container] width or [Expanded] with width wrapper
-  final Widget Function(BuildContext, int columnIndex, Widget child)
-      columnWrapper;
+  final Widget Function(BuildContext, int columnIndex, Widget child) columnWrapper;
 
   final double? maxWidth;
   final EdgeInsets? padding;
@@ -106,16 +102,11 @@ class _HorizontalTable extends StatelessWidget {
   Widget build(BuildContext context) {
     final localMaxWidth = maxWidth;
     return Container(
-      constraints: (localMaxWidth == null)
-          ? null
-          : BoxConstraints(maxWidth: localMaxWidth),
-      padding: (padding ?? const EdgeInsets.symmetric(horizontal: 20)) +
-          const EdgeInsets.symmetric(vertical: 4),
+      constraints: (localMaxWidth == null) ? null : BoxConstraints(maxWidth: localMaxWidth),
+      padding: (padding ?? const EdgeInsets.symmetric(horizontal: 20)) + const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         mainAxisSize: MainAxisSize.max,
-        children: children
-            .mapIndexed((index, child) => columnWrapper(context, index, child))
-            .toList(),
+        children: children.mapIndexed((index, child) => columnWrapper(context, index, child)).toList(),
       ),
     );
   }
